@@ -9,20 +9,20 @@ import exceptions as err
 def validate_hs_params(username, account_type):
     '''Verifies provided info when creating a Hiscore object'''
     if len(username) > 12:
-        raise BadUsername(username, "Twelve Error")
+        raise err.BadUsername(username, "Twelve Error")
     for char in username:
         if char not in const.valid_username_chars:
-            raise BadUsername(username, "Char Error")
+            raise err.BadUsername(username, "Char Error")
 
     if account_type not in const.valid_account_types and account_type is not None:
-        raise errors.BadAccountType(account_type)
+        raise err.BadAccountType(account_type)
     if account_type is None:
         final_type = get_acc_type(username)
         return username, final_type
 
     response = rq.get(const.hiscore_link_dict[account_type] + username)
     if response.status_code == 404:
-        raise UserNotFound(username, account_type)
+        raise err.UserNotFound(username, account_type)
     return username, account_type
 
 def get_acc_type(username):
